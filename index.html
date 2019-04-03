@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>CartagenaTech - Calidad del Aire</title>
+    
+    <script src="d3/d3.min.js"></script>
+    <link rel="stylesheet" href="leaflet//leaflet.css"/>
+ 	<script src="leaflet/leaflet.js"></script>
+
+   	<style type="text/css">
+   		#mapid { width: 600px; height: 400px; }
+   	</style>
+    
+</head>
+<body>
+
+<div id="mapid"></div>
+
+<hr />
+
+<div id="info">Info: </div>
+
+<script type="text/javascript">
+	let mymap = L.map('mapid').setView([10.418261, -75.50045], 12);
+
+	L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+	    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+	    maxZoom: 18,
+	    id: 'mapbox.streets',
+	    accessToken: 'pk.eyJ1IjoiZnJlZG1jIiwiYSI6ImNqdHVzNmpqYTFnd240NXBpMzlmbzY3dmQifQ.FMY2jw4SUjktzVpd0EePvg'
+	}).addTo(mymap);
+
+	// https://github.com/pointhi/leaflet-color-markers
+
+	let yellowIcon = new L.Icon({
+	  iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img//marker-icon-2x-yellow.png',
+	  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+	  iconSize: [25, 41],
+	  iconAnchor: [12, 41],
+	  popupAnchor: [1, -34],
+	  shadowSize: [41, 41]
+	});
+
+	let greenIcon = new L.Icon({
+	  iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+	  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+	  iconSize: [25, 41],
+	  iconAnchor: [12, 41],
+	  popupAnchor: [1, -34],
+	  shadowSize: [41, 41]
+	});
+
+	let redIcon = new L.Icon({
+	  iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
+	  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+	  iconSize: [25, 41],
+	  iconAnchor: [12, 41],
+	  popupAnchor: [1, -34],
+	  shadowSize: [41, 41]
+	});
+
+	let yellowMarker = L.marker([10.39391,-75.4786], {icon: yellowIcon}).addTo(mymap);
+	let greenMarker = L.marker([10.42181,-75.52552], {icon: greenIcon}).addTo(mymap);
+	let redMarker = L.marker([10.399351, -75.511436], {icon: redIcon}).addTo(mymap);
+
+	yellowMarker.bindPopup("<b>Ubicación:</b> Santa Lucia<br><b>Estado:</b> Aceptable<br><b>Causa:</b> PM2.5<br><b>Valor:</b> 32.5 um/g");
+	redMarker.bindPopup("<b>Ubicación:</b> Crisanto Luque<br><b>Estado:</b> Dañina<br><b>Causa:</b> PM10<br><b>Valor:</b> 50.1 um/g");
+
+	let popup = L.popup();
+
+	function onMapClick(e) {
+	    popup
+        .setLatLng(e.latlng)
+        .setContent("En la ubicación " + e.latlng.toString() + " no se cuenta con un medidor de calidad de aire. Si deseas colaborar con uno, escríbenos a <a href='mailto:calidadaire@email.com'>calidadaire@email.com</a>. ")
+        .openOn(mymap);
+
+        d3.select("#info").text("You clicked the map at " + e.latlng.toString());
+        //TO DO: enviar log a nuestro sistema con las coordenadas para registro de potenciales ubicaciones
+	}
+
+	mymap.on('click', onMapClick);
+
+</script>
+
+</body>
+</html>
